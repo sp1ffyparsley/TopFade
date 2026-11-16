@@ -15,7 +15,13 @@ A small, event-driven window utility for Windows, with an experimental native ma
 
 </div>
 
-## Real screenshots — Windows 10
+## See TopFade working — Windows 10
+
+![Real Windows desktop capture showing a reference window pinned and faded over a separate editing-workspace test window](docs/media/topfade-live-pin-fade-windows.png)
+
+<sub>Actual Windows desktop capture, not an AI-generated UI: TopFade pinned the reference window and applied **65% opacity** (native layered alpha 165/255). Both windows are disposable WinForms demonstration fixtures, not a screenshot of a video editor. They were unpinned, restored, and closed after the test.</sub>
+
+### Actual application controls
 
 | Window control | Preferences and opacity |
 | :---: | :---: |
