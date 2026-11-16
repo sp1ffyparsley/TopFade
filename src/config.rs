@@ -689,7 +689,7 @@ mod tests {
         }));
 
         assert!(state.update_opacity("C:/Apps/Editor.exe", "Project", 100));
-        assert!(state.remembered_windows.is_empty());
+        assert_eq!(state.remembered_windows, []);
     }
 
     #[test]
@@ -797,7 +797,7 @@ mod tests {
         let recovered = RuntimeState::load(&paths);
 
         assert_eq!(recovered.schema_version, 1);
-        assert!(recovered.remembered_windows.is_empty());
+        assert_eq!(recovered.remembered_windows, []);
         assert_eq!(
             fs::read_to_string(paths.state_file.with_extension("json.invalid")).unwrap(),
             "not-json"
@@ -805,7 +805,7 @@ mod tests {
         let repaired: RuntimeState =
             serde_json::from_slice(&fs::read(&paths.state_file).unwrap()).unwrap();
         assert_eq!(repaired.schema_version, 1);
-        assert!(repaired.remembered_windows.is_empty());
+        assert_eq!(repaired.remembered_windows, []);
         fs::remove_dir_all(directory).unwrap();
     }
 
