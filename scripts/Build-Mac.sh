@@ -37,7 +37,7 @@ fi
 STAGE="$OUTPUT_ROOT/.TopFade.app.stage.$$"
 # iconutil requires the input directory name to end in ".iconset".
 # The prior ".iconset.$PID" suffix was rejected as an invalid iconset.
-ICONSET="$OUTPUT_ROOT/.TopFade.$.iconset"
+ICONSET="$OUTPUT_ROOT/.TopFade.$PPID.$RANDOM.iconset"
 cleanup() {
     rm -rf "$STAGE" "$ICONSET"
 }
