@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Windows release gates
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Unit tests
+        run: cargo test --locked
+      - name: Strict lint
+        run: cargo clippy --locked --all-targets -- -D warnings
+      - name: Optimized build
+        run: cargo build --release --locked
+      - name: Verify fatal failures return nonzero
+        shell: pwsh
+        run: |
+          $blocker = Join-Path $env:RUNNER_TEMP "topfade-data-blocker"
+          Set-Content -LiteralPath $blocker -Value "file blocks directory creation"
+          $env:TOPFADE_DATA_DIR = $blocker
+          try {
+            $process = Start-Process `
+              -FilePath target/release/topfade.exe `
+              -ArgumentList "--diagnostic-report" `
+              -Wait `
+              -PassThru
+            if ($process.ExitCode -eq 0) {
+              throw "Fatal bootstrap failure returned exit code 0."
+            }
+          } finally {
+            Remove-Item Env:TOPFADE_DATA_DIR -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $blocker -Force -ErrorAction SilentlyContinue
+          }
+      - name: Artifact receipt
+        shell: pwsh
+        run: |
+          $file = Get-Item target/release/topfade.exe
+          [ordered]@{
+            bytes = $file.Length
+            sha256 = (Get-FileHash $file.FullName -Algorithm SHA256).Hash
+            rustc = (rustc --version)
+          } | ConvertTo-Json | Set-Content target/release/ci-receipt.json
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TopFade-Windows-x64
+          path: |
+            target/release/topfade.exe
+            target/release/ci-receipt.json
+          if-no-files-found: error
+
+  macos:
+    name: macOS native build
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate package and scripts
+        run: |
+          swift --version
+          swift package --package-path macos/TopFadeMac dump-package >/dev/null
+          plutil -lint macos/TopFadeMac/Resources/Info.plist
+          bash -n scripts/Build-Mac.sh scripts/Install-Mac.sh scripts/Test-MacIntegration.sh scripts/Test-MacInstallerTransaction.sh
+      - name: Build signed app bundle
+        run: bash scripts/Build-Mac.sh
+      - name: Verify installer interruption rollback
+        run: bash scripts/Test-MacInstallerTransaction.sh --skip-build
+      - name: Verify command and install lifecycle
+        run: |
+          dist/macos/TopFade.app/Contents/MacOS/TopFade --unregister-login
+          TOPFADE_INSTALL_ROOT="$RUNNER_TEMP/Applications" \
+            bash scripts/Install-Mac.sh --skip-build
+          test -x "$RUNNER_TEMP/Applications/TopFade.app/Contents/MacOS/TopFade"
+          TOPFADE_INSTALL_ROOT="$RUNNER_TEMP/Applications" \
+            bash scripts/Install-Mac.sh --uninstall --remove-data
+          test ! -e "$RUNNER_TEMP/Applications/TopFade.app"
+      - name: Verify and package artifact
+        run: |
+          codesign --verify --deep --strict dist/macos/TopFade.app
+          ditto -c -k --sequesterRsrc --keepParent \
+            dist/macos/TopFade.app dist/macos/TopFade-macOS.zip
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TopFade-macOS
+          path: |
+            dist/macos/TopFade-macOS.zip
+            dist/macos/build-receipt.json
+          if-no-files-found: error
