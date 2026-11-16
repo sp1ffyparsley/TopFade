@@ -35,7 +35,9 @@ if [[ ! -x "$SOURCE_BIN" ]]; then
 fi
 
 STAGE="$OUTPUT_ROOT/.TopFade.app.stage.$$"
-ICONSET="$OUTPUT_ROOT/.TopFade.iconset.$$"
+# iconutil requires the input directory name to end in ".iconset".
+# The prior ".iconset.$PID" suffix was rejected as an invalid iconset.
+ICONSET="$OUTPUT_ROOT/.TopFade.$.iconset"
 cleanup() {
     rm -rf "$STAGE" "$ICONSET"
 }
