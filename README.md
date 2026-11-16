@@ -15,9 +15,18 @@ A small, event-driven window utility for Windows, with an experimental native ma
 
 </div>
 
-![Illustration of the TopFade window manager, showing a pinned floating window and opacity controls](docs/media/topfade-overview.svg)
+![Actual TopFade Windows control window captured from a running Windows 10 PC](docs/media/topfade-real-windows-control.png)
 
-<sub>Concept illustration of TopFade's controls, not a screenshot of a production build.</sub>
+<sub>Real screenshot of the installed Windows version, showing its window control, opacity presets, and an active pinned window. No AI rendering or mockup.</sub>
+
+<details>
+<summary>See the concept illustration of pinning and fading</summary>
+
+![Illustration of pinning and fading a reference window](docs/media/topfade-overview.svg)
+
+*Illustration only. The screenshot above shows the real application.*
+
+</details>
 
 ## Why TopFade?
 
