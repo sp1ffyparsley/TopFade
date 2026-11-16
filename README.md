@@ -15,16 +15,20 @@ A small, event-driven window utility for Windows, with an experimental native ma
 
 </div>
 
-![Actual TopFade Windows control window captured from a running Windows 10 PC](docs/media/topfade-real-windows-control.png)
+## Real screenshots — Windows 10
 
-<sub>Real screenshot of the installed Windows version, showing its window control, opacity presets, and an active pinned window. No AI rendering or mockup.</sub>
+| Window control | Preferences and opacity |
+| :---: | :---: |
+| ![Actual TopFade control window showing a pinned application and opacity presets](docs/media/topfade-real-windows-control.png) | ![Actual TopFade preferences window showing hotkeys and fade settings](docs/media/topfade-real-windows-preferences.png) |
+
+<sub>These are genuine captures of the installed Windows application. The controls and the pinned application are real; no AI-generated interface imagery.</sub>
 
 <details>
 <summary>See the concept illustration of pinning and fading</summary>
 
 ![Illustration of pinning and fading a reference window](docs/media/topfade-overview.svg)
 
-*Illustration only. The screenshot above shows the real application.*
+*Diagram only; the two screenshots above show the real application.*
 
 </details>
 
