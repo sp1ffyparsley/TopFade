@@ -2201,7 +2201,7 @@ mod tests {
         apply_window_state_transactionally(&backend, &target, Some(false), Some(100)).unwrap();
 
         let state = backend.state.lock().unwrap();
-        assert_eq!(state.topmost_calls, []);
+        assert_eq!(state.topmost_calls, [] as [bool; 0]);
         assert_eq!(state.opacity, 100);
     }
 }
