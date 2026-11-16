@@ -9,5 +9,6 @@ TopFade is under active development. There has not yet been an official binary r
 - Local Windows source checks and integration fixtures; CI builds Windows and macOS source artifacts.
 - Mac source hardening for process-scoped capture cleanup and late-frame generation checks, pending native Mac validation.
 - Source structure, documentation, security notes, and diagrams prepared for public review.
+- GitHub Actions macOS compilation moved to the supported `macos-15` runner after the `macos-14` image retirement.
 
 For detailed implementation history, see the Git commit log and [validation notes](docs/VALIDATION.md). Build artifacts are not automatically considered production releases.
