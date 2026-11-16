@@ -279,7 +279,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         pendingActivationRequest = false
         controlWindow.present()
-        viewModel?.statusMessage = "Opened by another TopFade launch."
         TopFadeLogger.shared.info("Existing TopFade instance activated")
     }
 

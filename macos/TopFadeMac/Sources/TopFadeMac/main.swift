@@ -20,8 +20,7 @@ if !CommandLine.arguments.contains("--self-test") {
         DistributedNotificationCenter.default().post(
             name: .topFadeActivationRequested,
             object: "com.tavito.topfade",
-            userInfo: nil,
-            deliverImmediately: true
+            userInfo: nil
         )
         _ = existing.activate(options: [.activateAllWindows])
         exit(EXIT_SUCCESS)

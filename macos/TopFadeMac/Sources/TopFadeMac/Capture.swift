@@ -216,7 +216,12 @@ final class SampleBufferView: NSView {
     }
 }
 
-final class WindowCaptureSession: NSObject, SCStreamOutput, SCStreamDelegate {
+// ScreenCaptureKit invokes output/delegate callbacks from its own queues.
+// Mutable stream ownership and queued frames are protected by stateLock and
+// frameLock; renderer updates are dispatched to the main queue. The Sendable
+// conformance is explicitly unchecked because this class also owns AppKit
+// objects that must never be mutated off the main queue.
+final class WindowCaptureSession: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Sendable {
     let source: SourceWindow
     let displayView: SampleBufferView
     var onUnexpectedStop: ((Error) -> Void)?
